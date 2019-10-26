@@ -12,7 +12,7 @@ pipeline {
         dir('android_src/') {
             git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/simple-timestamp-app.git'
             withSonarQubeEnv('android') {
-                sh 'sudo docker run -e SONAR_HOST_URL -e SONAR_CONFIG_NAME -e SONARQUBE_SCANNER_PARAMS -e SONAR_AUTH_TOKEN -e SONAR_MAVEN_GOAL -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle sonarqube'
+                sh 'sudo docker run -e SONAR_HOST_URL -e SONAR_CONFIG_NAME -e SONARQUBE_SCANNER_PARAMS -e SONAR_AUTH_TOKEN -e SONAR_MAVEN_GOAL -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle env'
             }
             sh '''
                 pwd
