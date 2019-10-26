@@ -13,6 +13,10 @@ pipeline {
             git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/simple-timestamp-app.git'
             sh '''
                 pwd
+                sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle sonarqube \
+  -Dsonar.projectKey=${Sonar-project} \
+  -Dsonar.host.url=${Sonar-host} \
+  -Dsonar.login=${Sonar-login}
                 sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle assembleDebug
                 '''
         }
