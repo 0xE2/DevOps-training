@@ -11,10 +11,11 @@ pipeline {
         steps {
         dir('android_src/') {
             git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/simple-timestamp-app.git'
+            withSonarQubeEnv() {
+                sh 'sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle sonarqube'
+            }
             sh '''
                 pwd
-                withSonarQubeEnv()
-                sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle sonarqube
                 sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle assembleDebug
                 '''
         }
