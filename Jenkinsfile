@@ -10,8 +10,8 @@ pipeline {
     stage('Test and Build') {
         steps {
         dir('android_src/') {
-            //git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/simple-timestamp-app.git'
-            git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/diva-android.git'
+            git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/simple-timestamp-app.git'
+            //git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/diva-android.git'
             withSonarQubeEnv('android') {
                 sh 'sudo docker system prune -f'
                 sh 'sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle sonarqube \
