@@ -7,10 +7,11 @@ pipeline {
     skipStagesAfterUnstable()
   }
   stages {
-    stage('Build') {
+    stage('Test and Build') {
         steps {
         dir('android_src/') {
-            git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/simple-timestamp-app.git'
+            //git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/simple-timestamp-app.git'
+            git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/diva-android.git'
             withSonarQubeEnv('android') {
                 sh 'sudo docker system prune -f'
                 sh 'sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle sonarqube \
@@ -54,7 +55,7 @@ sudo /usr/bin/python3 bot.py >log 2>&1 &''', execTimeout: 120000, flatten: false
   }
   post {
       always {
-          telegramSend "Running ${env.BUILD_ID} for ${env.JOB_NAME}"
+          telegramSend "Running build ${env.BUILD_ID} for ${env.JOB_NAME}"
       }
       success {
           telegramSend "Build ${env.BUILD_ID} finished"
