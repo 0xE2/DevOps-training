@@ -11,7 +11,6 @@ pipeline {
         steps {
         dir('android_src/') {
             git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/simple-timestamp-app.git'
-            //git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/diva-android.git'
             withSonarQubeEnv('android') {
                 sh 'sudo docker system prune --volumes -f'
                 sh 'sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle sonarqube \
@@ -21,8 +20,9 @@ pipeline {
             }
             sh '''
                 pwd
-                sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle assembleDebug
+                sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle test assembleDebug
                 '''
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'app/build/reports/tests/testDebugUnitTest/', reportFiles: 'index.html', reportName: 'JUnit report', reportTitles: ''])
         }
         }
     }
