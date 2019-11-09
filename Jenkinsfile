@@ -50,6 +50,9 @@ ls''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExclu
             sshPublisher(publishers: [sshPublisherDesc(configName: 'Prod', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''sudo killall -9 /usr/bin/python3
 cd ~/bot
 sudo /usr/bin/python3 bot.py >log 2>&1 &''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'reports', remoteDirectorySDF: false, removePrefix: '', sourceFiles: 'java_rev.html, apk_rev.html')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+            withAWS(credentials: 'ca3886c9-2ab5-4be5-80fc-dabf46cd997e', region: 'us-east-2') {
+              s3Upload acl: 'Private', bucket: 'jennys3bucket', file: '**/app-debug.apk', path: "tmstmp-apk/debug-${env.GIT_COMMIT}"
+            }
         }
     }
   }
