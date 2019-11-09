@@ -23,7 +23,8 @@ pipeline {
                 docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle test assembleDebug
                 '''
             publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'app/build/reports/tests/testDebugUnitTest/', reportFiles: 'index.html', reportName: 'JUnit report', reportTitles: ''])
-            junit '**/build/test-results/testDebugUnitTest/*.xml'
+            sh "cp **/build/test-results/testDebugUnitTest/*.xml junit.xml"
+            junit 'junit.xml'
         }
         }
     }
