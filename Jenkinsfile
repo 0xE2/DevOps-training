@@ -12,15 +12,15 @@ pipeline {
         dir('android_src/') {
             git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/simple-timestamp-app.git'
             withSonarQubeEnv('android') {
-                sh 'sudo docker system prune --volumes -f'
-                sh 'sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle sonarqube \
+                sh 'docker system prune --volumes -f'
+                sh 'docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle sonarqube \
   -Dsonar.projectKey=adroid_tmstmp \
   -Dsonar.host.url=$SONAR_HOST_URL \
   -Dsonar.login=$SONAR_AUTH_TOKEN'
             }
             sh '''
                 pwd
-                sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle test assembleDebug
+                docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle test assembleDebug
                 '''
             publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'app/build/reports/tests/testDebugUnitTest/', reportFiles: 'index.html', reportName: 'JUnit report', reportTitles: ''])
             junit '**/build/test-results/testDebugUnitTest/*.xml'
