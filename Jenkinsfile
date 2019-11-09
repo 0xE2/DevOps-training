@@ -7,7 +7,7 @@ pipeline {
     skipStagesAfterUnstable()
   }
   stages {
-    stage('Test and Build') {
+    stage('Scan and Build') {
         steps {
         dir('android_src/') {
             git credentialsId: 'github-ssh-key', url: 'git@github.com:0xE2/simple-timestamp-app.git'
@@ -23,10 +23,11 @@ pipeline {
                 sudo docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle test assembleDebug
                 '''
             publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'app/build/reports/tests/testDebugUnitTest/', reportFiles: 'index.html', reportName: 'JUnit report', reportTitles: ''])
+            junit '**/build/test-results/testDebugUnitTest/*.xml'
         }
         }
     }
-    stage('Source code & apk security check') {
+    stage('Qark source code & apk security check') {
         steps {
             dir('android_src/') {
                 sh '''
@@ -51,7 +52,7 @@ ls''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExclu
 cd ~/bot
 sudo /usr/bin/python3 bot.py >log 2>&1 &''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'reports', remoteDirectorySDF: false, removePrefix: '', sourceFiles: 'java_rev.html, apk_rev.html')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
             withAWS(credentials: 'ca3886c9-2ab5-4be5-80fc-dabf46cd997e', region: 'us-east-2') {
-              s3Upload acl: 'Private', bucket: 'jennys3bucket', file: '**/app-debug.apk', path: "tmstmp-apk/debug-${env.GIT_COMMIT}"
+              s3Upload acl: 'Private', bucket: 'jennys3bucket', file: 'app/build/outputs/apk/debug/app-debug.apk', path: "tmstmp-apk/debug-${env.GIT_COMMIT}"
             }
         }
     }
