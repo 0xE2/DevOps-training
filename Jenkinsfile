@@ -48,7 +48,7 @@ pipeline {
         steps{
             archiveArtifacts artifacts: "**/app-debug.apk", excludes: "**/*unaligned.apk", fingerprint: true, onlyIfSuccessful: true
             sshPublisher(publishers: [sshPublisherDesc(configName: 'Prod', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''pwd
-ls''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'apk', remoteDirectorySDF: false, removePrefix: 'android_src/app/build/outputs/apk/debug', sourceFiles: '**/app-debug.apk.apk')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+ls''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'apk', remoteDirectorySDF: false, removePrefix: 'android_src/app/build/outputs/apk/debug', sourceFiles: '**/app-debug.apk')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
             sshPublisher(publishers: [sshPublisherDesc(configName: 'Prod', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''sudo killall -9 /usr/bin/python3
 cd ~/bot
 sudo /usr/bin/python3 bot.py >log 2>&1 &''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'reports', remoteDirectorySDF: false, removePrefix: '', sourceFiles: 'java_rev.html, apk_rev.html')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
