@@ -19,6 +19,9 @@ pipeline {
   -Dsonar.login=$SONAR_AUTH_TOKEN'
             }
             sh '''
+                ./sonar.sh
+               '''
+            sh '''
                 pwd
                 docker run -v "$PWD":/home/gradle/App -w /home/gradle/App android-build:android-gradle gradle test assembleDebug
                 '''
@@ -61,7 +64,7 @@ sudo /usr/bin/python3 bot.py >log 2>&1 &''', execTimeout: 120000, flatten: false
           telegramSend "Running build ${env.BUILD_ID} for ${env.JOB_NAME}"
       }
       success {
-          telegramSend "Build ${env.BUILD_ID} finished"
+          telegramSend "Build ${env.BUILD_ID} for commit ${env.GIT_COMMIT} finished"
       }
       unsuccessful {
           telegramSend "Build ${env.BUILD_ID} for commit ${env.GIT_COMMIT} failed"
