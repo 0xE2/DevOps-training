@@ -53,8 +53,10 @@ sudo /usr/bin/python3 bot.py >log 2>&1 &''', execTimeout: 120000, flatten: false
             withAWS(credentials: 'ca3886c9-2ab5-4be5-80fc-dabf46cd997e', region: 'us-east-2') {
               s3Upload acl: 'Private', bucket: 'jennys3bucket', file: 'android_src/app/build/outputs/apk/debug/app-debug.apk', path: "tmstmp-apk/debug-${env.GIT_COMMIT}.apk"
             }
+          #pull sonarqube report and push it to defectdojo
           sh '''
              ./sonar.sh
+             /usr/bin/python ddojo_upl.py
              '''
         }
     }
